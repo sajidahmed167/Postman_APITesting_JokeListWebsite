@@ -1,0 +1,567 @@
+{
+	"info": {
+		"_postman_id": "4bcefdf1-d4bc-4875-b5ff-1cc7df480eb8",
+		"name": "JokeApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21756348"
+	},
+	"item": [
+		{
+			"name": "Get Jokes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//test1: Checking to see if Get request has been successful",
+							"pm.test(\"Status code:200 successful get request\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//test2: checking the response time",
+							"pm.test(\"Response time is less than 400ms, testing performance\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(400);",
+							"});",
+							"",
+							"//test3: Checking to see if the get request is valid and successfully retrieving data",
+							"pm.test(\"response is valid and has a body\", function () {",
+							"     pm.response.to.be.ok;",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json;",
+							"});",
+							"",
+							"//test4: Counting all the jokes",
+							"const jsonData = pm.response.json();",
+							"var count = Object.keys(jsonData).length;",
+							"pm.expect(count);",
+							"tests[\"Count of all the jokes: \"  + count] = true;",
+							"",
+							"//test5: Using the count from above to compare to manually counting all of them to determine if there are any difference or error while retrieving them",
+							"pm.test(\"Expected number of jokes is equal to manual count\", function () {",
+							"    pm.expect(count).to.equal(13);",
+							"});",
+							"",
+							"",
+							"//test6: checking if the structure or layout is valid",
+							"pm.test(\"Checking Structure\", () => {",
+							"    const Structure = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"isDeleted\": {",
+							"            \"type\": \"boolean\"",
+							"        },",
+							"        \"content\": {",
+							"            \"type\": \"string\"",
+							"        } ",
+							"",
+							"    }",
+							"    }",
+							"    pm.response.to.have.jsonSchema(Structure);",
+							"});",
+							"",
+							"//test7: Checking if the uuid matches the a joke after creating it using POST request, declared the uuid and then compared with the the text.",
+							"pm.test(\"Checking UUID against expected Joke to check post request\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var uuid = Object ('609bdc87-6a8e-4d26-83f7-3e4-8db5c4d0ed39')",
+							"    pm.expect(jsonData[uuid].content).to.eql(\"When life gives you lemon make tea\");",
+							"});",
+							"",
+							"//test8: Checking if the Delete Request work, Declared the uuid and checked if the is delete value is true",
+							"pm.test(\"Checking if deletion worked for testing delete request\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var uuid = Object ('1cc2ec02-31af-467a-8bca-133-49a270a00653')",
+							"    pm.expect(jsonData[uuid].isDeleted).to.eql(true);",
+							"});",
+							"",
+							"//Test9: Check to see if content has a headers",
+							"pm.test(\"Content-Type header is present\", () => {",
+							"  pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"//Test10: Check to see if a joke exist in the database to test get method",
+							"pm.test (\"Checking if content exist in the database for testing get request\", function () {",
+							"pm.expect(pm.response.text()).to. include (\"I invented a new word. Plagiarism!\");",
+							"});",
+							"",
+							"//Test11: Check to see if update is working using the put request, Declared the uuid and then compare it with the new joke. Previously the joke was \"how do trains eat? Chew chew\" which has been changed to \"I have updated the joke in the database\"",
+							"pm.test(\"Checking UUID against expected Joke to check Put request\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var uuid = Object ('484f1bcf-92e5-6da-4911-a23f-5242631bacd6')",
+							"    pm.expect(jsonData[uuid].content).to.eql(\"I have updated the joke in the database\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Joke",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Test12: Checking to see if Post request has been successful",
+							"pm.test(\"Successful POST request, Status Code:200/201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"When life gives you lemon make tea\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Blank Joke",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Test13: Checking to see if extreme values such as null are accepted and reponse is successful",
+							"pm.test(\"Successful POST request, Status Code:200/201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Empty Input",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//test14: sending invalid request and checking to see bad response is returned",
+							"pm.test(\"Status code: 400, invalid request due to missing content and syntax error\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Joke",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Test15: Checking to see if Put request has been successful",
+							"pm.test(\"Status code: 200, Successful Put request\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uuid\": \"484f1bcf-92e5-6da-4911-a23f-5242631bacd6\",\n    \"content\": \"I have updated the joke in the database\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Test16: Test with invalid input for uuid, the request will pass as there is no syntax error but no changes will be made to the database. Response will be successful",
+							"pm.test(\"Response Successful but no changes in server because input is invalid\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uuid\": \"sajid\",\n    \"content\": \"this cannot be a joke\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Empty Content",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//test17: Sending invalid request and checking to see bad response is returned",
+							"pm.test(\"Status code: 400, invalid request due to missing content and syntax error\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uuid\": \"de21d183-b4ef-466d-646-a29c-6da3f40d3ffb\",\n    \"content\": \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Empty UUID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Test18: sending invalid request and checking to see bad response is returned",
+							"pm.test(\"Status code: 400, invalid request due to missing UUID and syntax error\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uuid\": ,\n    \"content\": \"this cannot be a joke\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Empty Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//test19: Sending invalid request and checking to see bad response is returned",
+							"pm.test(\"Status code: 400, invalid request due to missing UUID and syntax error\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uuid\": \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Jokes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Test20: Checking to see if Delete request has been successful",
+							"pm.test(\"Status code: 200, Delete request was successful\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uuid\": \"de21d183-b4ef-466d-646-a29c-6da3f40d3ffb\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Test21: Test with invalid input for uuid, the request will pass as there is no syntax error but no changes will be made to the database. Response will be successful",
+							"pm.test(\"Response Successful but no changes in server because input is invalid\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uuid\": \"Sajid Ahmed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://backend.127-0-0-1.sslip.io/Jokes",
+					"protocol": "http",
+					"host": [
+						"backend",
+						"127-0-0-1",
+						"sslip",
+						"io"
+					],
+					"path": [
+						"Jokes"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
